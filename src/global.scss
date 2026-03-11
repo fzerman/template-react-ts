@@ -1,0 +1,119 @@
+// ─── Reset ───────────────────────────────────────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+// ─── Tokens ──────────────────────────────────────────────────────────────────
+:root {
+  --ui-gap: clamp(16px, 2vw, 32px);
+}
+
+// ─── App Shell ───────────────────────────────────────────────────────────────
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+// ─── Phaser Canvas Container ─────────────────────────────────────────────────
+// Phaser RESIZE mode owns the canvas dimensions — don't override them with CSS.
+#game-container {
+  position: absolute;
+  inset: 0;
+}
+
+// ─── UI Overlay ──────────────────────────────────────────────────────────────
+// Sits above the canvas. pointer-events: none so empty areas pass
+// clicks through to Phaser. Each zone re-enables pointer-events.
+#ui-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: var(--ui-gap);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
+}
+
+// ─── UI Zones ────────────────────────────────────────────────────────────────
+.ui-zone {
+  display: flex;
+  pointer-events: none; // re-enabled only when children exist
+
+  // Re-enable pointer events on any interactive children
+  * {
+    pointer-events: auto;
+  }
+}
+
+.ui-top-left {
+  grid-column: 1;
+  grid-row: 1;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.ui-top-center {
+  grid-column: 2;
+  grid-row: 1;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.ui-top-right {
+  grid-column: 3;
+  grid-row: 1;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.ui-left {
+  grid-column: 1;
+  grid-row: 2;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.ui-right {
+  grid-column: 3;
+  grid-row: 2;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.ui-bottom-left {
+  grid-column: 1;
+  grid-row: 3;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.ui-bottom-center {
+  grid-column: 2;
+  grid-row: 3;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ui-bottom-right {
+  grid-column: 3;
+  grid-row: 3;
+  align-items: flex-end;
+  justify-content: flex-end;
+}

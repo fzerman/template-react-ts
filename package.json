@@ -21,10 +21,12 @@
         "typescript"
     ],
     "scripts": {
-        "dev": "node log.js dev & vite --config vite/config.dev.mjs",
-        "build": "node log.js build & vite build --config vite/config.prod.mjs",
-        "dev-nolog": "vite --config vite/config.dev.mjs",
-        "build-nolog": "vite build --config vite/config.prod.mjs"
+        "sass:watch": "sass src/global.scss public/global.css --watch --no-source-map",
+        "sass:build": "sass src/global.scss public/global.css --no-source-map",
+        "dev": "node log.js dev & npm run sass:watch & vite --config vite/config.dev.mjs",
+        "build": "node log.js build & npm run sass:build && vite build --config vite/config.prod.mjs",
+        "dev-nolog": "npm run sass:watch & vite --config vite/config.dev.mjs",
+        "build-nolog": "npm run sass:build && vite build --config vite/config.prod.mjs"
     },
     "dependencies": {
         "phaser": "^3.90.0",
@@ -40,9 +42,10 @@
         "eslint-plugin-react-hooks": "^5.2.0",
         "eslint-plugin-react-refresh": "^0.4.19",
         "globals": "^16.0.0",
+        "sass": "^1.98.0",
+        "terser": "^5.28.1",
         "typescript": "~5.7.2",
         "typescript-eslint": "^8.26.1",
-        "vite": "^6.3.1",
-        "terser": "^5.28.1"
+        "vite": "^6.3.1"
     }
 }
