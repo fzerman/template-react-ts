@@ -26,6 +26,11 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
+        // Touch / click anywhere to start the game
+        this.input.on('pointerdown', () => {
+            this.changeScene();
+        });
+
         EventBus.emit('current-scene-ready', this);
     }
     
