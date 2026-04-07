@@ -1,14 +1,19 @@
-import { useRef } from 'react';
-import { IRefPhaserGame, PhaserGame } from './PhaserGame';
+import { useRef } from "react";
+import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
 import {
     UIOverlay,
-    UITopLeft, UITopCenter, UITopRight,
-    UILeft, UIRight,
-    UIBottomLeft, UIBottomCenter, UIBottomRight,
-} from './components/UIOverlay';
-import { PanelProvider } from './context/PanelContext';
-import { PanelLayer } from './components/PanelLayer';
-import { usePanel } from './hooks/usePanel';
+    UITopLeft,
+    UITopCenter,
+    UITopRight,
+    UILeft,
+    UIRight,
+    UIBottomLeft,
+    UIBottomCenter,
+    UIBottomRight,
+} from "./components/UIOverlay";
+import { PanelProvider } from "./context/PanelContext";
+import { PanelLayer } from "./components/PanelLayer";
+import { usePanel } from "./hooks/usePanel";
 
 function AppUI() {
     const phaserRef = useRef<IRefPhaserGame | null>(null);
@@ -24,7 +29,12 @@ function AppUI() {
 
             <UIOverlay>
                 <UITopLeft>
-                    <button className="ui-btn" onClick={() => openPanel('Pause')}>Menu</button>
+                    <button
+                        className="ui-btn"
+                        onClick={() => openPanel("Pause")}
+                    >
+                        Menu
+                    </button>
                 </UITopLeft>
 
                 <UITopCenter>
@@ -32,7 +42,12 @@ function AppUI() {
                 </UITopCenter>
 
                 <UITopRight>
-                    <button className="ui-btn" onClick={() => openPanel('Settings')}>Settings</button>
+                    <button
+                        className="ui-btn"
+                        onClick={() => openPanel("Settings")}
+                    >
+                        Settings
+                    </button>
                 </UITopRight>
 
                 <UILeft>
@@ -40,14 +55,19 @@ function AppUI() {
                 </UILeft>
 
                 <UIRight>
-                    <button className="ui-btn" onClick={() => openPanel('Market')}>Market</button>
+                    <button
+                        className="ui-btn"
+                        onClick={() => openPanel("Market")}
+                    >
+                        Market
+                    </button>
                 </UIRight>
 
                 <UIBottomLeft>
                     <button className="ui-btn">Map</button>
                 </UIBottomLeft>
 
-                <UIBottomCenter />
+                <UIBottomCenter>{/*      <ControlPad /> */}</UIBottomCenter>
 
                 <UIBottomRight>
                     <button className="ui-btn">Action</button>
