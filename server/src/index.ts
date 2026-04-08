@@ -2,6 +2,7 @@ import "dotenv/config";
 import http from "node:http";
 import { Server as SocketIOServer } from "socket.io";
 import app from "./app.js";
+import { SocketManager } from "./ws/SocketManager.js";
 
 const PORT = Number(process.env.PORT) || 3001;
 
@@ -15,11 +16,13 @@ const io = new SocketIOServer(server, {
     },
 });
 
-// TODO: register WebSocket handlers
+// ─── WebSocket handlers ─────────────────────────────────────────────────────
+const socketManager = new SocketManager(io);
+socketManager.init();
 
 // ─── Start ──────────────────────────────────────────────────────────────────
 server.listen(PORT, () => {
     console.log(`[server] listening on http://localhost:${PORT}`);
 });
 
-export { io };
+export { io, socketManager };
