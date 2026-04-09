@@ -261,13 +261,12 @@ body,
   }
 }
 #panel-layer {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 10;
   pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
 }
 #panel-layer.is-open {
   pointer-events: auto;
@@ -912,12 +911,11 @@ input:disabled ~ .cy-radio__label {
 }
 
 .cy-modal-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   animation: backdrop-in 200ms ease both;
 }
 .cy-modal-overlay--closing {
@@ -1596,6 +1594,9 @@ input:disabled + .cy-toggle__track {
 }
 
 .settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vw, 10px);
   margin-bottom: clamp(12px, 3vw, 20px);
 }
 .settings-group:last-child {
@@ -1774,6 +1775,164 @@ input:checked + .settings-toggle__track::after {
 }
 .pause-menu__item--danger:active {
   background: rgba(255, 45, 111, 0.1);
+}
+
+.inv-stats {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.inv-filters {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(245, 166, 35, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.inv-filter-tab {
+  flex: 1;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(245, 166, 35, 0.08);
+  color: rgba(255, 250, 240, 0.45);
+  font-family: "Rajdhani", sans-serif;
+  font-size: clamp(9px, 2vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.inv-filter-tab:last-child {
+  border-right: none;
+}
+.inv-filter-tab:hover {
+  color: #f5a623;
+  background: rgba(245, 166, 35, 0.04);
+}
+.inv-filter-tab--active {
+  color: #f5a623;
+  background: rgba(245, 166, 35, 0.08);
+  text-shadow: 0 0 8px rgba(245, 166, 35, 0.4);
+  box-shadow: inset 0 -2px 0 #f5a623;
+}
+
+.inv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: clamp(8px, 2vw, 12px);
+}
+
+.inv-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(10px, 2.5vw, 14px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+.inv-card:hover {
+  border-color: rgba(245, 166, 35, 0.2);
+  background: rgba(245, 166, 35, 0.02);
+}
+.inv-card--equipped {
+  border-color: rgba(245, 166, 35, 0.25);
+  background: rgba(245, 166, 35, 0.03);
+}
+.inv-card--equipped::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #f5a623;
+  box-shadow: 0 0 6px rgba(245, 166, 35, 0.4);
+}
+.inv-card {
+  position: relative;
+}
+
+.inv-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.inv-card__icon {
+  font-size: clamp(22px, 5vw, 30px);
+  width: clamp(40px, 9vw, 50px);
+  height: clamp(40px, 9vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 166, 35, 0.04);
+  border: 1px solid rgba(245, 166, 35, 0.1);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.inv-card__qty {
+  font-family: "Rajdhani", sans-serif;
+  font-size: clamp(11px, 2.5vw, 13px);
+  font-weight: 700;
+  color: #f5a623;
+  margin-left: auto;
+  padding: 1px 6px;
+  background: rgba(245, 166, 35, 0.08);
+  border: 1px solid rgba(245, 166, 35, 0.15);
+  border-radius: 2px;
+}
+
+.inv-card__equipped-tag {
+  font-family: "Orbitron", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: #f5a623;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  border-radius: 2px;
+  background: rgba(245, 166, 35, 0.1);
+  text-shadow: 0 0 6px rgba(245, 166, 35, 0.5);
+}
+
+.inv-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.inv-card__name {
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(10px, 2.2vw, 12px);
+  font-weight: 700;
+  color: rgba(255, 250, 240, 0.92);
+  letter-spacing: 0.06em;
+}
+
+.inv-card__desc {
+  font-family: "Rajdhani", sans-serif;
+  font-size: clamp(10px, 2vw, 11px);
+  font-weight: 500;
+  color: rgba(255, 250, 240, 0.45);
+  line-height: 1.3;
+}
+
+.inv-card__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .map-container {

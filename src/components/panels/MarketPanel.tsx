@@ -120,18 +120,12 @@ export function MarketPanel() {
                                     <span className="market-item__name">
                                         {item.name}
                                     </span>
-                                    <Row gap="xs" align="center">
-                                        <Col span="auto">
-                                            <span className="market-item__desc">
-                                                {item.desc}
-                                            </span>
-                                        </Col>
-                                        <Col span="auto">
-                                            <CyBadge variant="gold">
-                                                {item.category}
-                                            </CyBadge>
-                                        </Col>
-                                    </Row>
+                                    <span className="market-item__desc">
+                                        {item.desc}
+                                    </span>
+                                    <CyBadge variant="gold">
+                                        {item.category}
+                                    </CyBadge>
                                 </div>
                                 <div className="market-item__price">
                                     <span className="market-item__cost">

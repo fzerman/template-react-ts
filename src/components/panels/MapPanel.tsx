@@ -1,7 +1,6 @@
 import { Panel } from "../Panel";
 import { CyButton } from "../ui/Button";
 import { CyBadge } from "../ui/Badge";
-import { Row, Col } from "../ui/Grid";
 import { useToast } from "../../context/ToastContext";
 
 const DISTRICTS = [
@@ -131,53 +130,41 @@ export function MapPanel() {
                 <div className="map-districts">
                     {DISTRICTS.map((d) => (
                         <div className="map-district" key={d.id}>
-                            <Row align="center" gap="sm" wrap={false}>
-                                <Col span="auto">
-                                    <span
-                                        className="map-district__dot"
-                                        style={{
-                                            background: threatColor(d.threat),
-                                            boxShadow: `0 0 6px ${threatColor(d.threat)}`,
-                                        }}
-                                    />
-                                </Col>
-                                <Col>
-                                    <span className="map-district__name">
-                                        {d.name}
-                                    </span>
-                                </Col>
-                                <Col span="auto">
-                                    <CyBadge
-                                        variant={threatBadgeVariant(d.threat)}
-                                        dot
-                                    >
-                                        {d.threat}
-                                    </CyBadge>
-                                </Col>
-                                <Col span="auto">
-                                    <CyButton
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() =>
-                                            addToast({
-                                                variant: "info",
-                                                title: `Scouting ${d.name}`,
-                                                message: `Deploying recon to ${d.name}...`,
-                                            })
-                                        }
-                                    >
-                                        Scout
-                                    </CyButton>
-                                </Col>
-                            </Row>
+                            <div className="map-district__header">
+                                <span
+                                    className="map-district__dot"
+                                    style={{
+                                        background: threatColor(d.threat),
+                                        boxShadow: `0 0 6px ${threatColor(d.threat)}`,
+                                    }}
+                                />
+                                <span className="map-district__name">
+                                    {d.name}
+                                </span>
+                                <CyBadge
+                                    variant={threatBadgeVariant(d.threat)}
+                                    dot
+                                >
+                                    {d.threat}
+                                </CyBadge>
+                                <CyButton
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() =>
+                                        addToast({
+                                            variant: "info",
+                                            title: `Scouting ${d.name}`,
+                                            message: `Deploying recon to ${d.name}...`,
+                                        })
+                                    }
+                                >
+                                    Scout
+                                </CyButton>
+                            </div>
                             <div className="map-district__meta">
-                                <Row gap="xs" align="center">
-                                    <Col span="auto">
-                                        <span className="map-district__control">
-                                            {d.control}
-                                        </span>
-                                    </Col>
-                                </Row>
+                                <span className="map-district__control">
+                                    {d.control}
+                                </span>
                                 <span className="map-district__desc">
                                     {d.desc}
                                 </span>

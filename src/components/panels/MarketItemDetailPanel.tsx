@@ -166,34 +166,24 @@ export function MarketItemDetailPanel() {
 
     return (
         <Panel title="Item Detail">
-            <Row gap="md" align="center">
-                <Col span="auto">
-                    <div className="market-item__icon">{ITEM.icon}</div>
-                </Col>
-                <Col>
+            <div className="item-detail__header">
+                <div className="market-item__icon">{ITEM.icon}</div>
+                <div className="item-detail__title-group">
                     <h3 className="item-detail__name">{ITEM.name}</h3>
-                    <Row gap="xs" align="center">
-                        <Col span="auto">
-                            <span className="item-detail__seller">
-                                Sold by {ITEM.seller}
-                            </span>
-                        </Col>
-                        <Col span="auto">
-                            <CyBadge variant="gold">{ITEM.category}</CyBadge>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col span="auto">
-                    <div className="item-detail__price-tag">
-                        <span className="item-detail__cost">
-                            ${ITEM.price.toLocaleString()}
-                        </span>
-                        <CyBadge variant={ITEM.stock > 0 ? "gold" : "pink"}>
-                            {ITEM.stock} in stock
-                        </CyBadge>
-                    </div>
-                </Col>
-            </Row>
+                    <span className="item-detail__seller">
+                        Sold by {ITEM.seller}
+                        {" "}<CyBadge variant="gold">{ITEM.category}</CyBadge>
+                    </span>
+                </div>
+                <div className="item-detail__price-tag">
+                    <span className="item-detail__cost">
+                        ${ITEM.price.toLocaleString()}
+                    </span>
+                    <CyBadge variant={ITEM.stock > 0 ? "gold" : "pink"}>
+                        {ITEM.stock} in stock
+                    </CyBadge>
+                </div>
+            </div>
 
             <p className="item-detail__desc">{ITEM.desc}</p>
 

@@ -66,7 +66,12 @@ function AppUI() {
 
                 <UILeft>
                     <div className="ui-btn-group ui-btn-group--vertical">
-                        <div className="ui-box">Rackets</div>
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("Inventory")}
+                        >
+                            Inventory
+                        </button>
                         <button
                             className="ui-btn"
                             onClick={() => openPanel("Components")}

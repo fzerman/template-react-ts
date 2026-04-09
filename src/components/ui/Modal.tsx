@@ -66,7 +66,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
                         onConfirm={handleConfirm}
                         onCancel={handleCancel}
                     />,
-                    document.body
+                    document.getElementById("app") ?? document.body
                 )}
         </ModalContext.Provider>
     );

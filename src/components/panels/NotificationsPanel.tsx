@@ -4,6 +4,7 @@ import { CyButton } from "../ui/Button";
 import { CyBadge } from "../ui/Badge";
 import { Row, Col } from "../ui/Grid";
 
+
 type NotifType = "alert" | "info" | "reward" | "threat";
 
 interface Notification {
@@ -137,27 +138,17 @@ export function NotificationsPanel() {
                             {notifIcon(n.type)}
                         </span>
                         <div className="notif-item__body">
-                            <Row justify="between" align="center" gap="sm" wrap={false}>
-                                <Col>
-                                    <span className="notif-item__title">
-                                        {n.title}
-                                    </span>
-                                </Col>
-                                <Col span="auto">
-                                    <Row gap="xs" align="center" wrap={false}>
-                                        <Col span="auto">
-                                            <CyBadge variant={notifBadgeVariant(n.type)}>
-                                                {n.type}
-                                            </CyBadge>
-                                        </Col>
-                                        <Col span="auto">
-                                            <span className="notif-item__time">
-                                                {n.time}
-                                            </span>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
+                            <div className="notif-item__top">
+                                <span className="notif-item__title">
+                                    {n.title}
+                                </span>
+                                <CyBadge variant={notifBadgeVariant(n.type)}>
+                                    {n.type}
+                                </CyBadge>
+                                <span className="notif-item__time">
+                                    {n.time}
+                                </span>
+                            </div>
                             <p className="notif-item__message">{n.message}</p>
                         </div>
                     </div>
