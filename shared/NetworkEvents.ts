@@ -1,29 +1,22 @@
 // ─── Shared types used by both client and server ────────────────────────────
-// This file has NO runtime imports so it can be consumed by either tsconfig.
+// All game logic runs on the client. Server is for data exchange only.
 
-// ─── Player Sync ────────────────────────────────────────────────────────────
+// ─── User / Economy ─────────────────────────────────────────────────────────
 
-export interface PlayerState {
-    id: string;
-    x: number;
-    y: number;
-    vx: number;
-    vy: number;
-    hp: number;
-    maxHp: number;
-    state: string;          // FSM state name
-    name: string;
+export interface UserData {
+    userId: string;
+    username: string;
+    balance: number;
+    level: number;
 }
 
-// ─── Game State ─────────────────────────────────────────────────────────────
+export interface MarketPrices {
+    [itemId: string]: number;
+}
 
-export type GamePhase = 'lobby' | 'playing' | 'ended';
-
-export interface GameState {
-    phase: GamePhase;
-    roomId: string;
-    players: PlayerState[];
-    tick: number;
+export interface GlobalState {
+    market: MarketPrices;
+    serverTime: number;
 }
 
 // ─── Notifications ──────────────────────────────────────────────────────────
@@ -34,33 +27,29 @@ export interface GameNotification {
     type: NotificationType;
     message: string;
     duration?: number;      // ms, default 3000
+    data?: Record<string, unknown>;
 }
 
 // ─── Client → Server events ────────────────────────────────────────────────
 
 export interface ClientToServerEvents {
-    'player:sync': (data: Pick<PlayerState, 'x' | 'y' | 'vx' | 'vy' | 'hp' | 'state'>) => void;
-    'room:join': (data: { roomId: string }) => void;
-    'room:leave': () => void;
-    'game:ready': () => void;
+    'user:sync': (data: Pick<UserData, 'balance' | 'level'>) => void;
+    'market:buy': (data: { itemId: string; quantity: number }) => void;
+    'market:sell': (data: { itemId: string; quantity: number }) => void;
     'ping': (cb: (serverTime: number) => void) => void;
 }
 
 // ─── Server → Client events ────────────────────────────────────────────────
 
 export interface ServerToClientEvents {
-    'player:joined': (data: PlayerState) => void;
-    'player:left': (data: { id: string }) => void;
-    'player:updated': (data: PlayerState) => void;
-    'players:snapshot': (data: PlayerState[]) => void;
-    'game:state': (data: GameState) => void;
-    'game:notification': (data: GameNotification) => void;
-    'room:joined': (data: { roomId: string; players: PlayerState[] }) => void;
-    'room:error': (data: { message: string }) => void;
-    'pong': (data: { serverTime: number }) => void;
+    'user:data': (data: UserData) => void;
+    'global:state': (data: GlobalState) => void;
+    'market:update': (data: MarketPrices) => void;
+    'notification': (data: GameNotification) => void;
+    'connected': (data: { userId: string }) => void;
 }
 
-// ─── Inter-server events (unused for now, required by socket.io typing) ────
+// ─── Inter-server events ───────────────────────────────────────────────────
 
 export interface InterServerEvents {
     // placeholder
@@ -71,5 +60,4 @@ export interface InterServerEvents {
 export interface SocketData {
     userId: string;
     username: string;
-    roomId?: string;
 }

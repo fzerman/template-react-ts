@@ -22,53 +22,23 @@ const BOX_CONFIGS = [
 ];
 
 const BOX_W = 48;
-const BOX_COLLIDER_R = BOX_W / 2; // 24
+const BOX_COLLIDER_R = BOX_W / 2;
 
 const ENEMY_CONFIGS = [
     {
-        x: 300,
-        y: 300,
-        color: 0x00d4ff,
-        name: "GUARD A",
-        speed: 80,
-        attackDamage: 8,
-        attackRate: 1,
-        waypoints: [
-            { x: 250, y: 250 },
-            { x: 450, y: 250 },
-            { x: 450, y: 400 },
-            { x: 250, y: 400 },
-        ],
+        id: "guard-a", x: 300, y: 300, color: 0x00d4ff, name: "GUARD A",
+        speed: 80, attackDamage: 8, attackRate: 1,
+        waypoints: [{ x: 250, y: 250 }, { x: 450, y: 250 }, { x: 450, y: 400 }, { x: 250, y: 400 }],
     },
     {
-        x: 650,
-        y: 450,
-        color: 0xf5e642,
-        name: "GUARD B",
-        speed: 100,
-        attackDamage: 12,
-        attackRate: 1.5,
-        waypoints: [
-            { x: 600, y: 400 },
-            { x: 750, y: 400 },
-            { x: 750, y: 500 },
-            { x: 600, y: 500 },
-        ],
+        id: "guard-b", x: 650, y: 450, color: 0xf5e642, name: "GUARD B",
+        speed: 100, attackDamage: 12, attackRate: 1.5,
+        waypoints: [{ x: 600, y: 400 }, { x: 750, y: 400 }, { x: 750, y: 500 }, { x: 600, y: 500 }],
     },
     {
-        x: 400,
-        y: 200,
-        color: 0x00ff88,
-        name: "GUARD C",
-        speed: 90,
-        attackDamage: 5,
-        attackRate: 2,
-        waypoints: [
-            { x: 350, y: 180 },
-            { x: 500, y: 180 },
-            { x: 500, y: 300 },
-            { x: 350, y: 300 },
-        ],
+        id: "guard-c", x: 400, y: 200, color: 0x00ff88, name: "GUARD C",
+        speed: 90, attackDamage: 5, attackRate: 2,
+        waypoints: [{ x: 350, y: 180 }, { x: 500, y: 180 }, { x: 500, y: 300 }, { x: 350, y: 300 }],
     },
 ];
 
@@ -156,6 +126,7 @@ export class Game extends Scene {
                     speed: cfg.speed,
                     attackDamage: cfg.attackDamage,
                     attackRate: cfg.attackRate,
+                    npcId: cfg.id,
                 },
                 [
                     new IdleBehavior(),
@@ -164,19 +135,10 @@ export class Game extends Scene {
                 ],
             );
 
-            // Register enemy states
             enemy.stateMachine
                 .addState(new EnemyIdleState(enemy, enemy.stateMachine))
-                .addState(
-                    new EnemyPatrolState(
-                        enemy,
-                        enemy.stateMachine,
-                        this.player,
-                    ),
-                )
-                .addState(
-                    new EnemyChaseState(enemy, enemy.stateMachine, this.player),
-                )
+                .addState(new EnemyPatrolState(enemy, enemy.stateMachine, this.player))
+                .addState(new EnemyChaseState(enemy, enemy.stateMachine, this.player))
                 .addState(new EnemyDeadState(enemy))
                 .setState("Idle");
 
@@ -197,38 +159,22 @@ export class Game extends Scene {
 
     private buildTestBoxes() {
         for (const cfg of BOX_CONFIGS) {
-            // Flat drop-shadow ellipse
-            const shadow = this.add.ellipse(
-                cfg.x,
-                cfg.y + 4,
-                40,
-                14,
-                0x000000,
-                0.4,
-            );
+            const shadow = this.add.ellipse(cfg.x, cfg.y + 4, 40, 14, 0x000000, 0.4);
             this.layers.shadows.add(shadow);
 
-            // Collision circle visual
             const colliderArc = this.add
                 .circle(cfg.x, cfg.y, BOX_COLLIDER_R, cfg.color, 0.18)
                 .setStrokeStyle(1.5, cfg.color, 0.85);
             this.layers.shadows.add(colliderArc);
 
-            // Register static collider
-            this.collisions.addStatic({
-                x: cfg.x,
-                y: cfg.y,
-                radius: BOX_COLLIDER_R,
-            });
+            this.collisions.addStatic({ x: cfg.x, y: cfg.y, radius: BOX_COLLIDER_R });
 
-            // Body rectangle — origin at feet (0.5, 1) so .y is the Y-sort key
             const rect = this.add
                 .rectangle(cfg.x, cfg.y, BOX_W, 68, cfg.color)
                 .setStrokeStyle(2, 0xffffff, 0.6)
                 .setOrigin(0.5, 1);
             this.layers.world.add(rect);
 
-            // Label in overhead layer — always visible above everything
             const lbl = this.add
                 .text(cfg.x, cfg.y - 76, cfg.name, {
                     fontSize: "10px",
@@ -242,15 +188,10 @@ export class Game extends Scene {
         }
     }
 
-    private onPanelOpen = () => {
-        this.input.enabled = false;
-    };
-    private onPanelClose = () => {
-        this.input.enabled = true;
-    };
+    private onPanelOpen = () => { this.input.enabled = false; };
+    private onPanelClose = () => { this.input.enabled = true; };
 
     changeScene() {
         this.scene.start("GameOver");
     }
 }
-

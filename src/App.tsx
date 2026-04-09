@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import "./game/network/devConnect"; // registers window.devConnect + event logging
 import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
 import {
     UIOverlay,

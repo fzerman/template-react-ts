@@ -22,7 +22,6 @@ export class EnemyChaseState implements IState {
     }
 
     enter(): void {
-        // Reset attack timer so first hit has a short delay
         this.attackTimer = 0;
     }
 

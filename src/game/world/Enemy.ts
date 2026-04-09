@@ -3,12 +3,14 @@ import { Character, type CharacterConfig } from './Character';
 
 export interface EnemyConfig extends CharacterConfig {
     attackDamage?: number;
-    attackRate?: number;   // attacks per second
+    attackRate?: number;
+    npcId?: string;
 }
 
 export class Enemy extends Character {
     readonly attackDamage: number;
     readonly attackRate: number;
+    readonly npcId: string;
 
     private behaviors: Map<string, IBehavior> = new Map();
 
@@ -16,6 +18,7 @@ export class Enemy extends Character {
         super(config);
         this.attackDamage = config.attackDamage ?? 10;
         this.attackRate   = config.attackRate ?? 1;
+        this.npcId        = config.npcId ?? config.name;
 
         if (behaviors) {
             for (const b of behaviors) {
