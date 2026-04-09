@@ -13,14 +13,29 @@ body,
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000;
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgba(255, 255, 255, 0.87);
+    background: #08080c;
+    font-family: "Rajdhani", sans-serif;
+    color: rgba(255, 250, 240, 0.92);
 }
 
 // ─── Tokens ──────────────────────────────────────────────────────────────────
+$bg-deep: #08080c;
+$bg-surface: rgba(15, 12, 20, 0.75);
+$neon-gold: #f5a623;
+$neon-pink: #ff2d6f;
+$neon-orange: #ff6b35;
+$glass-white: rgba(255, 255, 255, 0.08);
+$glass-border: rgba(255, 255, 255, 0.15);
+$glass-border-hot: rgba(245, 166, 35, 0.4);
+$glass-blur: 12px;
+$text-primary: rgba(255, 250, 240, 0.92);
+$text-dim: rgba(255, 250, 240, 0.45);
+
 :root {
     --ui-gap: clamp(16px, 2vw, 32px);
+    --neon-gold: #{$neon-gold};
+    --neon-pink: #{$neon-pink};
+    --neon-orange: #{$neon-orange};
 }
 
 // ─── App Shell ───────────────────────────────────────────────────────────────
@@ -29,19 +44,16 @@ body,
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000;
+    background: $bg-deep;
 }
 
 // ─── Phaser Canvas Container ─────────────────────────────────────────────────
-// Phaser RESIZE mode owns the canvas dimensions — don't override them with CSS.
 #game-container {
     position: absolute;
     inset: 0;
 }
 
 // ─── UI Overlay ──────────────────────────────────────────────────────────────
-// Sits above the canvas. pointer-events: none so empty areas pass
-// clicks through to Phaser. Each zone re-enables pointer-events.
 #ui-overlay {
     position: absolute;
     inset: 0;
@@ -56,9 +68,8 @@ body,
 // ─── UI Zones ────────────────────────────────────────────────────────────────
 .ui-zone {
     display: flex;
-    pointer-events: none; // re-enabled only when children exist
+    pointer-events: none;
 
-    // Re-enable pointer events on any interactive children
     * {
         pointer-events: auto;
     }
@@ -122,81 +133,157 @@ body,
     justify-content: flex-end;
 }
 
-// ─── UI Primitives — Glassmorphism Cyberpunk (Light) ─────────────────────────
-$cyber-cyan: #00d4ff;
-$cyber-yellow: #f5e642;
-$cyber-magenta: #ff2d9b;
-$glass-bg: rgba(255, 255, 255, 0.12);
-$glass-border: rgba(255, 255, 255, 0.45);
-$glass-blur: 16px;
+// ─── UI Primitives — Cyberpunk Mafia (Sleek Syndicate) ──────────────────────
 
 .ui-btn {
-    padding: clamp(6px, 1.5vw, 9px) clamp(12px, 3vw, 22px);
-    background: $glass-bg;
-    backdrop-filter: blur($glass-blur) saturate(180%);
-    -webkit-backdrop-filter: blur($glass-blur) saturate(180%);
-    color: #fff;
+    position: relative;
+    padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 24px);
+    background: $glass-white;
+    backdrop-filter: blur($glass-blur) saturate(150%);
+    -webkit-backdrop-filter: blur($glass-blur) saturate(150%);
+    color: $neon-gold;
     border: 1px solid $glass-border;
-    border-radius: 6px;
-    font-family: "Arial", monospace;
-    font-size: clamp(10px, 2.2vw, 12px);
-    font-weight: 800;
-    letter-spacing: 0.12em;
+    border-radius: 3px;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.2vw, 13px);
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
-    text-shadow: 0 0 8px rgba($cyber-cyan, 0.9);
+    text-shadow: 0 0 10px rgba($neon-gold, 0.5);
     box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.18),
-        0 0 0 1px rgba($cyber-cyan, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 0 16px rgba($cyber-cyan, 0.08);
-    transition: all 0.18s ease;
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba($neon-gold, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+    overflow: hidden;
+
+    // Bottom accent line
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: $neon-gold;
+        box-shadow: 0 0 8px rgba($neon-gold, 0.6);
+        transition: width 0.25s ease;
+    }
 
     &:hover {
-        background: rgba(255, 255, 255, 0.22);
-        border-color: rgba($cyber-cyan, 0.8);
+        border-color: $glass-border-hot;
         text-shadow:
-            0 0 12px $cyber-cyan,
-            0 0 24px rgba($cyber-cyan, 0.5);
+            0 0 12px rgba($neon-gold, 0.8),
+            0 0 24px rgba($neon-gold, 0.3);
         box-shadow:
-            0 4px 32px rgba(0, 0, 0, 0.22),
-            0 0 0 1px rgba($cyber-cyan, 0.6),
-            0 0 20px rgba($cyber-cyan, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.45),
-            inset 0 0 20px rgba($cyber-cyan, 0.12);
+            0 4px 24px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba($neon-gold, 0.2),
+            0 0 16px rgba($neon-gold, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+        &::after {
+            width: 80%;
+        }
     }
 
     &:active {
-        background: rgba($cyber-magenta, 0.15);
-        border-color: rgba($cyber-magenta, 0.8);
-        text-shadow: 0 0 12px $cyber-magenta;
+        background: rgba($neon-pink, 0.12);
+        border-color: rgba($neon-pink, 0.5);
+        color: $neon-pink;
+        text-shadow: 0 0 10px rgba($neon-pink, 0.6);
+        transform: scale(0.97);
         box-shadow:
-            0 2px 16px rgba(0, 0, 0, 0.2),
-            0 0 0 1px rgba($cyber-magenta, 0.6),
-            0 0 16px rgba($cyber-magenta, 0.3),
-            inset 0 0 16px rgba($cyber-magenta, 0.1);
+            0 2px 12px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba($neon-pink, 0.3),
+            inset 0 0 12px rgba($neon-pink, 0.08);
+
+        &::after {
+            width: 100%;
+            background: $neon-pink;
+            box-shadow: 0 0 8px rgba($neon-pink, 0.6);
+        }
+    }
+}
+
+// Action button variant — more prominent
+.ui-btn--primary {
+    border-color: $glass-border-hot;
+    padding: clamp(8px, 1.8vw, 12px) clamp(16px, 3.5vw, 28px);
+    font-size: clamp(12px, 2.5vw, 14px);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba($neon-gold, 0.15),
+        0 0 20px rgba($neon-gold, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: primary-pulse 3s ease-in-out infinite;
+
+    &::after {
+        width: 40%;
+    }
+}
+
+@keyframes primary-pulse {
+    0%,
+    100% {
+        box-shadow:
+            0 4px 24px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba($neon-gold, 0.15),
+            0 0 20px rgba($neon-gold, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow:
+            0 4px 24px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba($neon-gold, 0.3),
+            0 0 30px rgba($neon-gold, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 }
 
 .ui-box {
-    padding: clamp(5px, 1.5vw, 8px) clamp(10px, 2.5vw, 18px);
-    background: $glass-bg;
-    backdrop-filter: blur($glass-blur) saturate(180%);
-    -webkit-backdrop-filter: blur($glass-blur) saturate(180%);
-    color: #fff;
+    position: relative;
+    padding: clamp(6px, 1.5vw, 9px) clamp(12px, 2.5vw, 20px);
+    background: $glass-white;
+    backdrop-filter: blur($glass-blur) saturate(150%);
+    -webkit-backdrop-filter: blur($glass-blur) saturate(150%);
+    color: $neon-gold;
     border: 1px solid $glass-border;
-    border-radius: 6px;
-    font-family: "Arial", monospace;
-    font-size: clamp(10px, 2.2vw, 12px);
-    font-weight: 800;
+    border-top: 2px solid rgba($neon-gold, 0.3);
+    border-radius: 3px;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.2vw, 13px);
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-shadow: 0 0 8px rgba($cyber-yellow, 0.8);
+    text-shadow: 0 0 8px rgba($neon-gold, 0.4);
     box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba($cyber-yellow, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 0 16px rgba($cyber-yellow, 0.06);
+        0 4px 20px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba($neon-gold, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+// ─── Decorative Utilities ────────────────────────────────────────────────────
+
+.gold-rule {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background: rgba($neon-gold, 0.2);
+    margin: clamp(8px, 2vw, 14px) 0;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        width: 5px;
+        height: 5px;
+        background: rgba($neon-gold, 0.5);
+        box-shadow: 0 0 6px rgba($neon-gold, 0.4);
+    }
 }
 
 // ─── Panel Layer ──────────────────────────────────────────────────────────────
@@ -204,7 +291,7 @@ $glass-blur: 16px;
 @keyframes panel-in {
     from {
         opacity: 0;
-        transform: scale(0.94) translateY(14px);
+        transform: scale(0.96) translateY(10px);
     }
     to {
         opacity: 1;
@@ -219,7 +306,7 @@ $glass-blur: 16px;
     }
     to {
         opacity: 0;
-        transform: scale(0.94) translateY(14px);
+        transform: scale(0.96) translateY(10px);
     }
 }
 
@@ -261,15 +348,19 @@ $glass-blur: 16px;
 .panel-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 5, 15, 0.6);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 
     #panel-layer.is-open & {
-        animation: backdrop-in 200ms ease both;
+        animation: backdrop-in 280ms ease both;
     }
     #panel-layer.is-closing & {
-        animation: backdrop-out 200ms ease both;
+        animation: backdrop-out 250ms ease both;
     }
 }
 
@@ -279,28 +370,80 @@ $glass-blur: 16px;
     flex-direction: column;
     width: calc(100vw - var(--ui-gap) * 2);
     max-height: calc(100vh - var(--ui-gap) * 2);
-    overflow: hidden; // body scrolls, not the box
+    overflow: hidden;
 
     @media (min-width: 1440px) {
         max-width: 680px;
     }
 
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid $glass-border;
-    border-radius: clamp(8px, 2vw, 12px);
+    background: rgba(10, 8, 16, 0.88);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid $glass-border-hot;
+    border-radius: 2px;
     box-shadow:
-        0 8px 48px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba($cyber-cyan, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    color: #fff;
+        0 8px 48px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba($neon-gold, 0.1),
+        0 0 40px rgba($neon-gold, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    color: $text-primary;
+
+    // Scan-line texture overlay
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.015) 2px,
+            rgba(255, 255, 255, 0.015) 4px
+        );
+        pointer-events: none;
+        z-index: 1;
+        border-radius: inherit;
+    }
+
+    // Geometric corner accents — top-left
+    &::after {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 20px;
+        height: 20px;
+        border-top: 2px solid $neon-gold;
+        border-left: 2px solid $neon-gold;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.6;
+    }
 
     #panel-layer.is-open & {
-        animation: panel-in 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation: panel-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
     }
     #panel-layer.is-closing & {
-        animation: panel-out 200ms ease both;
+        animation: panel-out 250ms ease both;
+    }
+}
+
+// Bottom-right corner accent (separate element needed since ::before is used for scan-lines)
+.panel-content {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 20px;
+        height: 20px;
+        border-bottom: 2px solid $neon-gold;
+        border-right: 2px solid $neon-gold;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.6;
     }
 }
 
@@ -308,15 +451,11 @@ $glass-blur: 16px;
 
 $panel-pad: clamp(16px, 4vw, 32px);
 
-// .panel-content — scrollable host, scrollbar on right (standard)
-// .panel-inner is intentionally removed; header + body are direct children
 .panel-content {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     padding: $panel-pad;
 }
 
@@ -325,29 +464,28 @@ $panel-pad: clamp(16px, 4vw, 32px);
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
-    // bleed to left / right / top edges of .panel-content
-    margin: calc($panel-pad * -1) calc($panel-pad * -1) clamp(12px, 3vw, 24px);
+    margin: calc($panel-pad * -1) calc($panel-pad * -1) 0;
     padding: clamp(12px, 3vw, 20px) $panel-pad;
-    border-bottom: 1px solid rgba($cyber-cyan, 0.2);
-    margin-bottom: 0px;
+    border-bottom: none;
+    position: relative;
 }
 
 .panel-title {
-    font-family: "Arial", monospace;
+    font-family: "Orbitron", sans-serif;
     font-size: clamp(13px, 3.5vw, 18px);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #fff;
-    text-shadow: 0 0 12px rgba($cyber-cyan, 0.8);
+    color: $neon-gold;
+    text-shadow: 0 0 16px rgba($neon-gold, 0.5);
     margin: 0;
 }
 
 .panel-close {
     background: none;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 4px;
-    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba($neon-gold, 0.25);
+    border-radius: 2px;
+    color: rgba($neon-gold, 0.6);
     font-size: clamp(13px, 3vw, 16px);
     width: clamp(28px, 7vw, 32px);
     height: clamp(28px, 7vw, 32px);
@@ -357,12 +495,14 @@ $panel-pad: clamp(16px, 4vw, 32px);
     justify-content: center;
     transition:
         color 0.15s,
-        border-color 0.15s;
+        border-color 0.15s,
+        background 0.15s;
     flex-shrink: 0;
 
     &:hover {
-        color: #fff;
-        border-color: rgba($cyber-magenta, 0.6);
+        color: $neon-pink;
+        border-color: rgba($neon-pink, 0.5);
+        background: rgba($neon-pink, 0.08);
     }
 }
 
@@ -378,9 +518,8 @@ $panel-pad: clamp(16px, 4vw, 32px);
 
     overflow-y: auto;
 
-    // Cyberpunk scrollbar
     scrollbar-width: thin;
-    scrollbar-color: rgba($cyber-cyan, 0.4) transparent;
+    scrollbar-color: rgba($neon-gold, 0.3) transparent;
 
     &::-webkit-scrollbar {
         width: 4px;
@@ -389,11 +528,11 @@ $panel-pad: clamp(16px, 4vw, 32px);
         background: transparent;
     }
     &::-webkit-scrollbar-thumb {
-        background: rgba($cyber-cyan, 0.4);
+        background: rgba($neon-gold, 0.3);
         border-radius: 2px;
 
         &:hover {
-            background: rgba($cyber-cyan, 0.7);
+            background: rgba($neon-gold, 0.6);
         }
     }
 }
@@ -410,11 +549,11 @@ $panel-pad: clamp(16px, 4vw, 32px);
     0%,
     100% {
         opacity: 0.5;
-        box-shadow: 0 0 6px rgba($cyber-cyan, 0.4);
+        box-shadow: 0 0 6px rgba($neon-gold, 0.4);
     }
     50% {
         opacity: 1;
-        box-shadow: 0 0 16px rgba($cyber-cyan, 0.9);
+        box-shadow: 0 0 16px rgba($neon-gold, 0.9);
     }
 }
 
@@ -431,8 +570,8 @@ $panel-pad: clamp(16px, 4vw, 32px);
 .panel-loading__spinner {
     width: clamp(28px, 6vw, 36px);
     height: clamp(28px, 6vw, 36px);
-    border: 2px solid rgba($cyber-cyan, 0.15);
-    border-top-color: $cyber-cyan;
+    border: 2px solid rgba($neon-gold, 0.15);
+    border-top-color: $neon-gold;
     border-radius: 50%;
     animation:
         spin 0.75s linear infinite,
@@ -440,12 +579,12 @@ $panel-pad: clamp(16px, 4vw, 32px);
 }
 
 .panel-loading__label {
-    font-family: "Arial", monospace;
+    font-family: "Rajdhani", sans-serif;
     font-size: clamp(10px, 2.2vw, 12px);
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba($cyber-cyan, 0.7);
+    color: rgba($neon-gold, 0.7);
 }
 
 // ─── Control Pad ─────────────────────────────────────────────────────────────
@@ -457,14 +596,14 @@ $panel-pad: clamp(16px, 4vw, 32px);
     gap: 4px;
     padding: 10px;
     margin-bottom: 8px;
-    background: $glass-bg;
-    backdrop-filter: blur($glass-blur) saturate(180%);
-    -webkit-backdrop-filter: blur($glass-blur) saturate(180%);
+    background: $glass-white;
+    backdrop-filter: blur($glass-blur) saturate(150%);
+    -webkit-backdrop-filter: blur($glass-blur) saturate(150%);
     border: 1px solid $glass-border;
-    border-radius: 14px;
+    border-radius: 4px;
     box-shadow:
         0 4px 24px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba($cyber-cyan, 0.15);
+        0 0 0 1px rgba($neon-gold, 0.08);
 }
 
 .ctrl-row {
@@ -477,12 +616,12 @@ $panel-pad: clamp(16px, 4vw, 32px);
 .ctrl-btn {
     width: 46px;
     height: 46px;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid $glass-border;
-    border-radius: 10px;
-    color: #fff;
+    border-radius: 3px;
+    color: $neon-gold;
     font-size: 18px;
     line-height: 1;
     cursor: pointer;
@@ -490,20 +629,20 @@ $panel-pad: clamp(16px, 4vw, 32px);
     align-items: center;
     justify-content: center;
     transition: all 0.1s ease;
-    text-shadow: 0 0 8px rgba($cyber-cyan, 0.9);
+    text-shadow: 0 0 8px rgba($neon-gold, 0.6);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
         0 2px 8px rgba(0, 0, 0, 0.25);
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
 
     &:active {
-        background: rgba($cyber-cyan, 0.25);
-        border-color: rgba($cyber-cyan, 0.8);
+        background: rgba($neon-gold, 0.15);
+        border-color: rgba($neon-gold, 0.5);
         box-shadow:
-            0 0 14px rgba($cyber-cyan, 0.45),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            0 0 14px rgba($neon-gold, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
         transform: scale(0.9);
     }
 }
@@ -513,11 +652,321 @@ $panel-pad: clamp(16px, 4vw, 32px);
     height: 46px;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Panel Placeholder ───────────────────────────────────────────────────────
 
 .panel-placeholder {
-    font-family: "Arial", monospace;
+    font-family: "Rajdhani", sans-serif;
     font-size: clamp(11px, 2.5vw, 13px);
-    color: rgba(255, 255, 255, 0.45);
+    color: $text-dim;
     letter-spacing: 0.05em;
+}
+
+// ─── Market Panel ────────────────────────────────────────────────────────────
+
+.market-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.market-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 2.5vw, 16px);
+    padding: clamp(10px, 2.5vw, 14px) 0;
+    border-bottom: 1px solid rgba($neon-gold, 0.1);
+    transition: background 0.15s ease;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: rgba($neon-gold, 0.03);
+    }
+}
+
+.market-item__icon {
+    font-size: clamp(20px, 5vw, 28px);
+    width: clamp(36px, 8vw, 44px);
+    height: clamp(36px, 8vw, 44px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($neon-gold, 0.06);
+    border: 1px solid rgba($neon-gold, 0.15);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.market-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.market-item__name {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(11px, 2.5vw, 13px);
+    font-weight: 700;
+    color: $neon-gold;
+    text-shadow: 0 0 8px rgba($neon-gold, 0.3);
+    letter-spacing: 0.06em;
+}
+
+.market-item__desc {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 500;
+    color: $text-dim;
+    letter-spacing: 0.02em;
+}
+
+.market-item__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.market-item__cost {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(12px, 2.8vw, 15px);
+    font-weight: 700;
+    color: $neon-gold;
+    letter-spacing: 0.04em;
+}
+
+.market-item__buy {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid rgba($neon-gold, 0.3);
+    border-radius: 2px;
+    color: $neon-gold;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+        border-color: $neon-gold;
+        background: rgba($neon-gold, 0.1);
+        text-shadow: 0 0 8px rgba($neon-gold, 0.5);
+        box-shadow: 0 0 12px rgba($neon-gold, 0.15);
+    }
+
+    &:active {
+        background: rgba($neon-pink, 0.1);
+        border-color: rgba($neon-pink, 0.5);
+        color: $neon-pink;
+    }
+}
+
+// ─── Settings Panel ──────────────────────────────────────────────────────────
+
+.settings-group {
+    margin-bottom: clamp(12px, 3vw, 20px);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.settings-group__title {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $neon-gold;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba($neon-gold, 0.3);
+    margin-bottom: clamp(8px, 2vw, 12px);
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba($neon-gold, 0.15);
+}
+
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(8px, 2vw, 12px) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    gap: 12px;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.settings-row__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+// Custom range slider
+.settings-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(100px, 25vw, 160px);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba($neon-gold, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        background: $neon-gold;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba($neon-gold, 0.6);
+        transition: box-shadow 0.15s ease;
+        margin-top: -5px; // (4px track - 14px thumb) / 2
+    }
+
+    &::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        background: $neon-gold;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba($neon-gold, 0.6);
+    }
+
+    &:hover::-webkit-slider-thumb {
+        box-shadow: 0 0 16px rgba($neon-gold, 0.9);
+    }
+
+    &::-webkit-slider-runnable-track {
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba($neon-gold, 0.2);
+    }
+
+    &::-moz-range-track {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba($neon-gold, 0.2);
+        border-radius: 2px;
+    }
+}
+
+// Custom toggle switch
+.settings-toggle {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.settings-toggle__track {
+    position: relative;
+    width: 38px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        background: $text-dim;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+
+    input:checked + & {
+        background: rgba($neon-gold, 0.2);
+        border-color: rgba($neon-gold, 0.5);
+
+        &::after {
+            left: 20px;
+            background: $neon-gold;
+            box-shadow: 0 0 8px rgba($neon-gold, 0.6);
+        }
+    }
+}
+
+// ─── Pause Menu ──────────────────────────────────────────────────────────────
+
+.pause-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: clamp(8px, 2vw, 16px) 0;
+}
+
+.pause-menu__item {
+    display: block;
+    width: 100%;
+    padding: clamp(12px, 3vw, 18px) clamp(16px, 4vw, 24px);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba($neon-gold, 0.1);
+    color: $neon-gold;
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(12px, 2.8vw, 15px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: rgba($neon-gold, 0.06);
+        text-shadow: 0 0 12px rgba($neon-gold, 0.6);
+        box-shadow: inset 0 -2px 0 $neon-gold;
+    }
+
+    &:active {
+        background: rgba($neon-gold, 0.1);
+    }
+
+    &--danger {
+        color: $neon-pink;
+        border-bottom-color: rgba($neon-pink, 0.1);
+
+        &:hover {
+            background: rgba($neon-pink, 0.06);
+            text-shadow: 0 0 12px rgba($neon-pink, 0.6);
+            box-shadow: inset 0 -2px 0 $neon-pink;
+        }
+
+        &:active {
+            background: rgba($neon-pink, 0.1);
+        }
+    }
 }

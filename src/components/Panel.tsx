@@ -24,6 +24,7 @@ export function Panel({ title, children, onClose }: PanelProps) {
                 <h2 className="panel-title">{title}</h2>
                 <button className="panel-close" onClick={onClose ?? closePanel}>✕</button>
             </div>
+            <div className="gold-rule" />
             <div className="panel-body">
                 {children}
             </div>

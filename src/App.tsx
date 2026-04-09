@@ -39,7 +39,7 @@ function AppUI() {
                 </UITopLeft>
 
                 <UITopCenter>
-                    <div className="ui-box">Score: 0</div>
+                    <div className="ui-box">Rep: 0</div>
                 </UITopCenter>
 
                 <UITopRight>
@@ -52,7 +52,7 @@ function AppUI() {
                 </UITopRight>
 
                 <UILeft>
-                    <div className="ui-box">Abilities</div>
+                    <div className="ui-box">Rackets</div>
                 </UILeft>
 
                 <UIRight>
@@ -60,7 +60,7 @@ function AppUI() {
                         className="ui-btn"
                         onClick={() => openPanel("Market")}
                     >
-                        Market
+                        Black Market
                     </button>
                 </UIRight>
 
@@ -71,7 +71,7 @@ function AppUI() {
                 <UIBottomCenter>{/*      <ControlPad /> */}</UIBottomCenter>
 
                 <UIBottomRight>
-                    <button className="ui-btn">Action</button>
+                    <button className="ui-btn ui-btn--primary">Action</button>
                 </UIBottomRight>
             </UIOverlay>
 

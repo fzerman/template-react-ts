@@ -4,7 +4,7 @@ import { PANEL_REGISTRY } from './panels';
 
 type AnimState = 'closed' | 'open' | 'closing';
 
-const CLOSE_DURATION = 200; // must match CSS animation duration
+const CLOSE_DURATION = 250; // must match CSS animation duration
 
 export function PanelLayer() {
     const { activePanel, closePanel } = usePanelContext();
