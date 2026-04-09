@@ -15,10 +15,15 @@ import {
 import { PanelProvider } from "./context/PanelContext";
 import { PanelLayer } from "./components/PanelLayer";
 import { usePanel } from "./hooks/usePanel";
+import { ToastProvider } from "./context/ToastContext";
+import { ToastContainer } from "./components/ToastContainer";
+import { useToast } from "./context/ToastContext";
+import { ModalProvider } from "./components/ui/Modal";
 
 function AppUI() {
     const phaserRef = useRef<IRefPhaserGame | null>(null);
     const { openPanel } = usePanel();
+    const { addToast } = useToast();
 
     const currentScene = (_scene: Phaser.Scene) => {
         // hook for scene changes — add logic here as needed
@@ -43,47 +48,92 @@ function AppUI() {
                 </UITopCenter>
 
                 <UITopRight>
-                    <button
-                        className="ui-btn"
-                        onClick={() => openPanel("Settings")}
-                    >
-                        Settings
-                    </button>
+                    <div className="ui-btn-group">
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("Notifications")}
+                        >
+                            Intel
+                        </button>
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("Settings")}
+                        >
+                            Settings
+                        </button>
+                    </div>
                 </UITopRight>
 
                 <UILeft>
-                    <div className="ui-box">Rackets</div>
+                    <div className="ui-btn-group ui-btn-group--vertical">
+                        <div className="ui-box">Rackets</div>
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("Components")}
+                        >
+                            UI Kit
+                        </button>
+                    </div>
                 </UILeft>
 
                 <UIRight>
-                    <button
-                        className="ui-btn"
-                        onClick={() => openPanel("Market")}
-                    >
-                        Black Market
-                    </button>
+                    <div className="ui-btn-group ui-btn-group--vertical">
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("Market")}
+                        >
+                            Black Market
+                        </button>
+                        <button
+                            className="ui-btn"
+                            onClick={() => openPanel("MarketItemDetail")}
+                        >
+                            Item Detail
+                        </button>
+                    </div>
                 </UIRight>
 
                 <UIBottomLeft>
-                    <button className="ui-btn">Map</button>
+                    <button
+                        className="ui-btn"
+                        onClick={() => openPanel("Map")}
+                    >
+                        Map
+                    </button>
                 </UIBottomLeft>
 
                 <UIBottomCenter>{/*      <ControlPad /> */}</UIBottomCenter>
 
                 <UIBottomRight>
-                    <button className="ui-btn ui-btn--primary">Action</button>
+                    <button
+                        className="ui-btn ui-btn--primary"
+                        onClick={() =>
+                            addToast({
+                                variant: "success",
+                                title: "Action Complete",
+                                message: "Operation executed successfully.",
+                            })
+                        }
+                    >
+                        Action
+                    </button>
                 </UIBottomRight>
             </UIOverlay>
 
             <PanelLayer />
+            <ToastContainer />
         </div>
     );
 }
 
 export default function App() {
     return (
-        <PanelProvider>
-            <AppUI />
-        </PanelProvider>
+        <ToastProvider>
+            <ModalProvider>
+                <PanelProvider>
+                    <AppUI />
+                </PanelProvider>
+            </ModalProvider>
+        </ToastProvider>
     );
 }

@@ -661,6 +661,819 @@ $panel-pad: clamp(16px, 4vw, 32px);
     letter-spacing: 0.05em;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// ─── PRIMITIVE COMPONENTS ────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── CyButton ────────────────────────────────────────────────────────────────
+
+.cy-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: $glass-white;
+    backdrop-filter: blur($glass-blur) saturate(150%);
+    -webkit-backdrop-filter: blur($glass-blur) saturate(150%);
+    border: 1px solid $glass-border;
+    border-radius: 2px;
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: $neon-gold;
+    text-shadow: 0 0 8px rgba($neon-gold, 0.4);
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: $neon-gold;
+        box-shadow: 0 0 6px rgba($neon-gold, 0.5);
+        transition: width 0.22s ease;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: $glass-border-hot;
+        text-shadow: 0 0 12px rgba($neon-gold, 0.7);
+        &::after { width: 70%; }
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    // ── Sizes
+    &--sm {
+        padding: 5px 12px;
+        font-size: clamp(9px, 2vw, 11px);
+    }
+    &--md {
+        padding: clamp(7px, 1.5vw, 10px) clamp(14px, 3vw, 22px);
+        font-size: clamp(11px, 2.2vw, 13px);
+    }
+    &--lg {
+        padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 32px);
+        font-size: clamp(13px, 2.8vw, 16px);
+    }
+
+    // ── Variants
+    &--primary {
+        border-color: $glass-border-hot;
+        box-shadow:
+            0 4px 20px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba($neon-gold, 0.12);
+        &::after { width: 30%; }
+        &:hover:not(:disabled)::after { width: 90%; }
+    }
+
+    &--danger {
+        color: $neon-pink;
+        text-shadow: 0 0 8px rgba($neon-pink, 0.4);
+        border-color: rgba($neon-pink, 0.25);
+        &::after { background: $neon-pink; box-shadow: 0 0 6px rgba($neon-pink, 0.5); }
+        &:hover:not(:disabled) {
+            border-color: rgba($neon-pink, 0.5);
+            text-shadow: 0 0 12px rgba($neon-pink, 0.7);
+        }
+    }
+
+    &--ghost {
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-color: transparent;
+        color: $text-dim;
+        text-shadow: none;
+        box-shadow: none;
+        &::after { display: none; }
+        &:hover:not(:disabled) {
+            color: $neon-gold;
+            background: rgba($neon-gold, 0.06);
+            border-color: rgba($neon-gold, 0.15);
+        }
+    }
+
+    &--full {
+        width: 100%;
+    }
+
+    &--loading {
+        pointer-events: none;
+    }
+}
+
+.cy-btn__icon {
+    display: flex;
+    font-size: 1.1em;
+}
+
+.cy-btn__spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba($neon-gold, 0.2);
+    border-top-color: $neon-gold;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+}
+
+// ─── CyInput / CyTextarea / CySelect ────────────────────────────────────────
+
+.cy-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cy-field__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $text-dim;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cy-field__hint {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 500;
+    color: $text-dim;
+    letter-spacing: 0.02em;
+}
+
+.cy-field__error {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 600;
+    color: $neon-pink;
+    letter-spacing: 0.02em;
+}
+
+// Shared input base
+%cy-input-base {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid $glass-border;
+    border-radius: 2px;
+    color: $text-primary;
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &::placeholder {
+        color: $text-dim;
+        font-weight: 500;
+    }
+
+    &:focus {
+        border-color: $glass-border-hot;
+        box-shadow: 0 0 0 1px rgba($neon-gold, 0.15), 0 0 12px rgba($neon-gold, 0.06);
+    }
+
+    .cy-field--error & {
+        border-color: rgba($neon-pink, 0.5);
+        &:focus {
+            border-color: rgba($neon-pink, 0.7);
+            box-shadow: 0 0 0 1px rgba($neon-pink, 0.15), 0 0 12px rgba($neon-pink, 0.06);
+        }
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+}
+
+.cy-input {
+    @extend %cy-input-base;
+
+    &--sm {
+        padding: 5px 10px;
+        font-size: clamp(10px, 2.2vw, 12px);
+    }
+    &--md {
+        padding: clamp(7px, 1.5vw, 10px) clamp(10px, 2.5vw, 14px);
+        font-size: clamp(11px, 2.4vw, 14px);
+    }
+    &--lg {
+        padding: clamp(10px, 2vw, 14px) clamp(12px, 3vw, 18px);
+        font-size: clamp(13px, 2.8vw, 16px);
+    }
+}
+
+.cy-textarea {
+    @extend %cy-input-base;
+    padding: clamp(8px, 2vw, 12px) clamp(10px, 2.5vw, 14px);
+    font-size: clamp(11px, 2.4vw, 14px);
+    min-height: 80px;
+    resize: vertical;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba($neon-gold, 0.3) transparent;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: rgba($neon-gold, 0.3);
+        border-radius: 2px;
+    }
+}
+
+// Select
+.cy-select-wrap {
+    position: relative;
+    display: flex;
+}
+
+.cy-select {
+    @extend %cy-input-base;
+    padding: clamp(7px, 1.5vw, 10px) clamp(10px, 2.5vw, 14px);
+    padding-right: 32px;
+    font-size: clamp(11px, 2.4vw, 14px);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+
+    option {
+        background: #14121a;
+        color: $text-primary;
+    }
+}
+
+.cy-select-wrap__arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $neon-gold;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+// Checkbox
+.cy-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.cy-checkbox__box {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid $glass-border;
+    border-radius: 2px;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 5px;
+        height: 9px;
+        border: 2px solid $neon-gold;
+        border-top: none;
+        border-left: none;
+        transform: rotate(45deg) scale(0);
+        opacity: 0;
+        transition: all 0.15s ease;
+    }
+
+    input:checked + & {
+        border-color: rgba($neon-gold, 0.5);
+        background: rgba($neon-gold, 0.1);
+
+        &::after {
+            transform: rotate(45deg) scale(1);
+            opacity: 1;
+        }
+    }
+
+    input:focus-visible + & {
+        box-shadow: 0 0 0 2px rgba($neon-gold, 0.2);
+    }
+
+    input:disabled + & {
+        opacity: 0.35;
+    }
+}
+
+.cy-checkbox__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.4vw, 14px);
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.03em;
+
+    input:disabled ~ & {
+        opacity: 0.35;
+    }
+}
+
+// Radio
+.cy-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.cy-radio__dot {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid $glass-border;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background: $neon-gold;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        box-shadow: 0 0 6px rgba($neon-gold, 0.5);
+        transition: all 0.15s ease;
+    }
+
+    input:checked + & {
+        border-color: rgba($neon-gold, 0.5);
+
+        &::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+    }
+
+    input:focus-visible + & {
+        box-shadow: 0 0 0 2px rgba($neon-gold, 0.2);
+    }
+
+    input:disabled + & {
+        opacity: 0.35;
+    }
+}
+
+.cy-radio__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.4vw, 14px);
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.03em;
+
+    input:disabled ~ & {
+        opacity: 0.35;
+    }
+}
+
+// ─── Modal ───────────────────────────────────────────────────────────────────
+
+.cy-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: backdrop-in 200ms ease both;
+
+    &--closing {
+        animation: backdrop-out 200ms ease both;
+        .cy-modal { animation: panel-out 200ms ease both; }
+    }
+}
+
+.cy-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.cy-modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: clamp(10px, 2.5vw, 16px);
+    padding: clamp(20px, 5vw, 36px) clamp(24px, 6vw, 44px);
+    max-width: min(420px, calc(100vw - var(--ui-gap) * 2));
+    background: rgba(10, 8, 16, 0.94);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid $glass-border-hot;
+    border-radius: 2px;
+    box-shadow:
+        0 8px 48px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba($neon-gold, 0.08),
+        0 0 40px rgba($neon-gold, 0.04);
+    animation: panel-in 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+
+    // Scan-line texture
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.012) 2px,
+            rgba(255, 255, 255, 0.012) 4px
+        );
+        pointer-events: none;
+        border-radius: inherit;
+    }
+
+    // Corner accents
+    &::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 16px;
+        height: 16px;
+        border-top: 2px solid $neon-gold;
+        border-left: 2px solid $neon-gold;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+}
+
+.cy-modal__icon {
+    font-size: clamp(22px, 5vw, 30px);
+
+    &[data-variant="confirm"] { color: $neon-gold; }
+    &[data-variant="danger"] { color: $neon-pink; }
+    &[data-variant="info"] { color: $text-dim; }
+}
+
+.cy-modal__title {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(13px, 3vw, 17px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: $text-primary;
+    margin: 0;
+}
+
+.cy-modal__message {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 500;
+    color: $text-dim;
+    line-height: 1.5;
+    max-width: 320px;
+}
+
+.cy-modal__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+// ─── Grid System ─────────────────────────────────────────────────────────────
+
+.cy-row {
+    display: flex;
+    width: 100%;
+
+    &--wrap { flex-wrap: wrap; }
+    &--align-start { align-items: flex-start; }
+    &--align-center { align-items: center; }
+    &--align-end { align-items: flex-end; }
+    &--align-stretch { align-items: stretch; }
+    &--justify-start { justify-content: flex-start; }
+    &--justify-center { justify-content: center; }
+    &--justify-end { justify-content: flex-end; }
+    &--justify-between { justify-content: space-between; }
+    &--justify-around { justify-content: space-around; }
+    &--justify-evenly { justify-content: space-evenly; }
+
+    &--gap-none { gap: 0; }
+    &--gap-xs { gap: 4px; }
+    &--gap-sm { gap: 8px; }
+    &--gap-md { gap: clamp(10px, 2.5vw, 16px); }
+    &--gap-lg { gap: clamp(16px, 4vw, 24px); }
+    &--gap-xl { gap: clamp(24px, 5vw, 36px); }
+}
+
+.cy-col {
+    min-width: 0;
+    flex: 1 1 0%;
+
+    // Fixed span columns (12-column grid)
+    @for $i from 1 through 12 {
+        &--#{$i} {
+            flex: 0 0 calc(#{$i} / 12 * 100%);
+            max-width: calc(#{$i} / 12 * 100%);
+        }
+    }
+
+    // Offsets
+    @for $i from 1 through 11 {
+        &--offset-#{$i} {
+            margin-left: calc(#{$i} / 12 * 100%);
+        }
+    }
+
+    // Responsive breakpoints
+    @media (min-width: 480px) {
+        @for $i from 1 through 12 {
+            &--sm-#{$i} {
+                flex: 0 0 calc(#{$i} / 12 * 100%);
+                max-width: calc(#{$i} / 12 * 100%);
+            }
+        }
+    }
+
+    @media (min-width: 768px) {
+        @for $i from 1 through 12 {
+            &--md-#{$i} {
+                flex: 0 0 calc(#{$i} / 12 * 100%);
+                max-width: calc(#{$i} / 12 * 100%);
+            }
+        }
+    }
+
+    @media (min-width: 1024px) {
+        @for $i from 1 through 12 {
+            &--lg-#{$i} {
+                flex: 0 0 calc(#{$i} / 12 * 100%);
+                max-width: calc(#{$i} / 12 * 100%);
+            }
+        }
+    }
+}
+
+// ─── Grid Demo Cell ──────────────────────────────────────────────────────────
+
+// ─── CyToggle ────────────────────────────────────────────────────────────────
+
+.cy-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cy-toggle__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.04em;
+}
+
+.cy-toggle__switch {
+    position: relative;
+    display: inline-flex;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+.cy-toggle__track {
+    position: relative;
+    width: 38px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        background: $text-dim;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+    }
+
+    input:checked + & {
+        background: rgba($neon-gold, 0.2);
+        border-color: rgba($neon-gold, 0.5);
+
+        &::after {
+            left: 20px;
+            background: $neon-gold;
+            box-shadow: 0 0 8px rgba($neon-gold, 0.6);
+        }
+    }
+
+    input:disabled + & {
+        opacity: 0.35;
+    }
+}
+
+// ─── CySlider ────────────────────────────────────────────────────────────────
+
+.cy-slider-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cy-slider-field__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.cy-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    min-width: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba($neon-gold, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        background: $neon-gold;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba($neon-gold, 0.6);
+        transition: box-shadow 0.15s ease;
+        margin-top: -5px;
+    }
+
+    &::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        background: $neon-gold;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba($neon-gold, 0.6);
+    }
+
+    &:hover::-webkit-slider-thumb {
+        box-shadow: 0 0 16px rgba($neon-gold, 0.9);
+    }
+
+    &::-webkit-slider-runnable-track {
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba($neon-gold, 0.2);
+    }
+
+    &::-moz-range-track {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba($neon-gold, 0.2);
+        border-radius: 2px;
+    }
+}
+
+// ─── CyBadge ─────────────────────────────────────────────────────────────────
+
+.cy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: $text-dim;
+    white-space: nowrap;
+
+    &--gold {
+        color: $neon-gold;
+        border-color: rgba($neon-gold, 0.25);
+        background: rgba($neon-gold, 0.06);
+    }
+    &--orange {
+        color: $neon-orange;
+        border-color: rgba($neon-orange, 0.25);
+        background: rgba($neon-orange, 0.06);
+    }
+    &--pink {
+        color: $neon-pink;
+        border-color: rgba($neon-pink, 0.25);
+        background: rgba($neon-pink, 0.06);
+    }
+    &--dim {
+        color: $text-dim;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+}
+
+.cy-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 4px currentColor;
+}
+
+// ─── Grid Demo Cell ──────────────────────────────────────────────────────────
+
+.grid-demo-cell {
+    padding: 8px;
+    background: rgba($neon-gold, 0.06);
+    border: 1px solid rgba($neon-gold, 0.15);
+    border-radius: 2px;
+    text-align: center;
+    font-family: "Rajdhani", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: $neon-gold;
+    letter-spacing: 0.06em;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ─── END PRIMITIVES ──────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Button Groups ──────────────────────────────────────────────────────────
+
+.ui-btn-group {
+    display: flex;
+    gap: clamp(6px, 1.5vw, 10px);
+}
+
+.ui-btn-group--vertical {
+    flex-direction: column;
+}
+
 // ─── Market Panel ────────────────────────────────────────────────────────────
 
 .market-grid {
@@ -968,5 +1781,623 @@ $panel-pad: clamp(16px, 4vw, 32px);
         &:active {
             background: rgba($neon-pink, 0.1);
         }
+    }
+}
+
+// ─── Map Panel ───────────────────────────────────────────────────────────────
+
+.map-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 3vw, 20px);
+}
+
+.map-svg {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($neon-gold, 0.12);
+    border-radius: 2px;
+}
+
+@keyframes map-ping {
+    0% {
+        r: 2;
+        opacity: 0.6;
+    }
+    100% {
+        r: 8;
+        opacity: 0;
+    }
+}
+
+.map-pulse {
+    animation: map-ping 2.5s ease-out infinite;
+}
+
+.map-districts {
+    display: flex;
+    flex-direction: column;
+}
+
+.map-district {
+    padding: clamp(8px, 2vw, 12px) 0;
+    border-bottom: 1px solid rgba($neon-gold, 0.08);
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.map-district__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.map-district__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.map-district__name {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: 0.08em;
+    flex: 1;
+}
+
+.map-district__threat {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &[data-level="low"] {
+        color: $neon-gold;
+        border-color: rgba($neon-gold, 0.2);
+    }
+    &[data-level="medium"] {
+        color: $neon-orange;
+        border-color: rgba($neon-orange, 0.2);
+    }
+    &[data-level="high"],
+    &[data-level="extreme"] {
+        color: $neon-pink;
+        border-color: rgba($neon-pink, 0.2);
+    }
+}
+
+.map-district__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 16px;
+}
+
+.map-district__control {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 600;
+    color: $neon-gold;
+    letter-spacing: 0.04em;
+}
+
+.map-district__desc {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2vw, 11px);
+    font-weight: 500;
+    color: $text-dim;
+}
+
+// ─── Market Item Detail ──────────────────────────────────────────────────────
+
+.item-detail__header {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 2.5vw, 16px);
+}
+
+.item-detail__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.item-detail__name {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(13px, 3vw, 16px);
+    font-weight: 700;
+    color: $neon-gold;
+    text-shadow: 0 0 10px rgba($neon-gold, 0.4);
+    letter-spacing: 0.08em;
+    margin: 0;
+}
+
+.item-detail__seller {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 500;
+    color: $text-dim;
+}
+
+.item-detail__price-tag {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.item-detail__cost {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: 700;
+    color: $neon-gold;
+    text-shadow: 0 0 12px rgba($neon-gold, 0.4);
+}
+
+.item-detail__stock {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 600;
+    color: $text-dim;
+    letter-spacing: 0.06em;
+}
+
+.item-detail__desc {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 14px);
+    font-weight: 500;
+    color: $text-dim;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+}
+
+// Stat bars
+.item-detail__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-bar__label {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 600;
+    color: $text-dim;
+    letter-spacing: 0.06em;
+    width: 70px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.stat-bar__track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba($neon-gold, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.stat-bar__fill {
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        $neon-gold,
+        $neon-orange
+    );
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba($neon-gold, 0.4);
+    transition: width 0.5s ease;
+}
+
+.stat-bar__value {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $neon-gold;
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+// Price chart
+.price-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: clamp(10px, 2.5vw, 16px);
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba($neon-gold, 0.1);
+    border-radius: 2px;
+}
+
+.price-chart__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.price-chart__label {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 700;
+    color: $text-dim;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.price-chart__trend {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(11px, 2.5vw, 13px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+
+    &--up {
+        color: $neon-gold;
+    }
+    &--down {
+        color: $neon-pink;
+    }
+}
+
+.price-chart__svg {
+    width: 100%;
+    height: auto;
+}
+
+@keyframes chart-ping {
+    0% {
+        r: 3.5;
+        opacity: 0.6;
+    }
+    100% {
+        r: 8;
+        opacity: 0;
+    }
+}
+
+.chart-pulse {
+    animation: chart-ping 2s ease-out infinite;
+}
+
+.price-chart__range {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 10px);
+    font-weight: 600;
+    color: $text-dim;
+    letter-spacing: 0.04em;
+}
+
+.price-chart__range-val {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 10px);
+    font-weight: 600;
+    color: $text-dim;
+    letter-spacing: 0.04em;
+}
+
+// Action buttons
+.item-detail__actions {
+    display: flex;
+    justify-content: center;
+    padding-top: clamp(6px, 1.5vw, 10px);
+}
+
+.item-detail__buy-btn {
+    padding: clamp(8px, 2vw, 12px) clamp(20px, 5vw, 40px) !important;
+    font-size: clamp(11px, 2.5vw, 13px) !important;
+    letter-spacing: 0.14em !important;
+}
+
+// ─── Notifications Panel ─────────────────────────────────────────────────────
+
+.notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: clamp(8px, 2vw, 12px);
+}
+
+.notif-header__count {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $neon-gold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.notif-header__clear {
+    background: none;
+    border: 1px solid rgba($neon-gold, 0.2);
+    border-radius: 2px;
+    color: $text-dim;
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 11px);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+        color: $neon-gold;
+        border-color: rgba($neon-gold, 0.4);
+    }
+}
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.notif-item {
+    display: flex;
+    gap: clamp(8px, 2vw, 12px);
+    padding: clamp(10px, 2.5vw, 14px) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    opacity: 0.55;
+    transition: opacity 0.15s ease;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &--unread {
+        opacity: 1;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.notif-item__icon {
+    width: clamp(28px, 6vw, 34px);
+    height: clamp(28px, 6vw, 34px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+    font-size: clamp(12px, 2.8vw, 15px);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &[data-type="threat"] {
+        color: $neon-pink;
+        border-color: rgba($neon-pink, 0.2);
+        background: rgba($neon-pink, 0.06);
+    }
+    &[data-type="reward"] {
+        color: $neon-gold;
+        border-color: rgba($neon-gold, 0.2);
+        background: rgba($neon-gold, 0.06);
+    }
+    &[data-type="alert"] {
+        color: $neon-orange;
+        border-color: rgba($neon-orange, 0.2);
+        background: rgba($neon-orange, 0.06);
+    }
+    &[data-type="info"] {
+        color: $text-dim;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+}
+
+.notif-item__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-item__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.notif-item__title {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: 0.06em;
+}
+
+.notif-item__time {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(9px, 2vw, 10px);
+    font-weight: 500;
+    color: $text-dim;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.notif-item__message {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 500;
+    color: $text-dim;
+    line-height: 1.4;
+}
+
+// ─── Toast System ────────────────────────────────────────────────────────────
+
+#toast-container {
+    position: absolute;
+    top: var(--ui-gap);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+    max-width: calc(100vw - var(--ui-gap) * 2);
+    width: 380px;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toast-out {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+    }
+}
+
+@keyframes toast-timer {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
+.toast {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
+    background: rgba(10, 8, 16, 0.92);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid $glass-border;
+    border-radius: 2px;
+    pointer-events: auto;
+    cursor: pointer;
+    animation: toast-in 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    overflow: hidden;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba($neon-gold, 0.06);
+
+    &--exit {
+        animation: toast-out 300ms ease both;
+    }
+
+    // Variant border accents
+    &--info {
+        border-left: 2px solid $text-dim;
+    }
+    &--success {
+        border-left: 2px solid $neon-gold;
+    }
+    &--warning {
+        border-left: 2px solid $neon-orange;
+    }
+    &--error {
+        border-left: 2px solid $neon-pink;
+    }
+}
+
+.toast__icon {
+    font-size: clamp(12px, 2.8vw, 15px);
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+
+    &[data-variant="info"] {
+        color: $text-dim;
+    }
+    &[data-variant="success"] {
+        color: $neon-gold;
+    }
+    &[data-variant="warning"] {
+        color: $neon-orange;
+    }
+    &[data-variant="error"] {
+        color: $neon-pink;
+    }
+}
+
+.toast__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.toast__title {
+    font-family: "Orbitron", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: 0.06em;
+}
+
+.toast__message {
+    font-family: "Rajdhani", sans-serif;
+    font-size: clamp(10px, 2.2vw, 12px);
+    font-weight: 500;
+    color: $text-dim;
+    line-height: 1.4;
+}
+
+.toast__timer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: $neon-gold;
+    box-shadow: 0 0 6px rgba($neon-gold, 0.4);
+    animation: toast-timer linear both;
+
+    .toast--warning & {
+        background: $neon-orange;
+        box-shadow: 0 0 6px rgba($neon-orange, 0.4);
+    }
+    .toast--error & {
+        background: $neon-pink;
+        box-shadow: 0 0 6px rgba($neon-pink, 0.4);
+    }
+    .toast--info & {
+        background: $text-dim;
+        box-shadow: none;
     }
 }

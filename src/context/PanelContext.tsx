@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { EventBus } from '../game/EventBus';
 
 // ─── Panel names ─────────────────────────────────────────────────────────────
-export type PanelName = 'Market' | 'Settings' | 'Pause';
+export type PanelName = 'Market' | 'MarketItemDetail' | 'Settings' | 'Pause' | 'Map' | 'Notifications' | 'Components';
 
 // ─── Event name constants (shared with Phaser scenes) ────────────────────────
 export const PANEL_EVENTS = {
