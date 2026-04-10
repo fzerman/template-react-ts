@@ -3,6 +3,8 @@ import http from "node:http";
 import { Server as SocketIOServer } from "socket.io";
 import app from "./app.js";
 import { SocketManager } from "./ws/SocketManager.js";
+import { sequelize } from "./db/models/index.js";
+import { setupAdmin } from "./admin/index.js";
 
 const PORT = Number(process.env.PORT) || 3001;
 
@@ -21,8 +23,17 @@ const socketManager = new SocketManager(io);
 socketManager.init();
 
 // ─── Start ──────────────────────────────────────────────────────────────────
-server.listen(PORT, () => {
-    console.log(`[server] listening on http://localhost:${PORT}`);
-});
+(async () => {
+    await sequelize.authenticate();
+    console.log("[db] connected");
+    await sequelize.sync();
+    console.log("[db] synced");
+
+    await setupAdmin(app);
+
+    server.listen(PORT, () => {
+        console.log(`[server] listening on http://localhost:${PORT}`);
+    });
+})();
 
 export { io, socketManager };

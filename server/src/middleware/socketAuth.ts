@@ -6,17 +6,19 @@ import type {
     InterServerEvents,
     SocketData,
 } from "../../../shared/NetworkEvents.js";
-
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+import { Player } from "../db/models/index.js";
+import { env } from "../config/env.js";
 
 export interface JwtPayload {
     userId: string;
+    vendorId: string;
     username: string;
+    type: string;
 }
 
 /**
  * Socket.IO middleware that verifies the JWT token from `socket.handshake.auth.token`.
- * On success, populates `socket.data` with userId and username.
+ * On success, verifies the player exists in DB and populates `socket.data`.
  */
 export function socketAuth(
     socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>,
@@ -29,10 +31,23 @@ export function socketAuth(
     }
 
     try {
-        const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-        socket.data.userId = payload.userId;
-        socket.data.username = payload.username;
-        next();
+        const payload = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+
+        if (payload.type !== "access") {
+            return next(new Error("Invalid token type"));
+        }
+
+        Player.findByPk(payload.userId).then((player) => {
+            if (!player) {
+                return next(new Error("Player not found"));
+            }
+            socket.data.userId = player.id;
+            socket.data.vendorId = player.vendorId;
+            socket.data.username = player.username;
+            next();
+        }).catch(() => {
+            next(new Error("Database error during authentication"));
+        });
     } catch {
         next(new Error("Invalid or expired token"));
     }

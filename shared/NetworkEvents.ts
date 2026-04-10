@@ -47,6 +47,7 @@ export interface ServerToClientEvents {
     'market:update': (data: MarketPrices) => void;
     'notification': (data: GameNotification) => void;
     'connected': (data: { userId: string }) => void;
+    'auth:error': (data: { message: string }) => void;
 }
 
 // ─── Inter-server events ───────────────────────────────────────────────────
@@ -59,5 +60,6 @@ export interface InterServerEvents {
 
 export interface SocketData {
     userId: string;
+    vendorId: string;
     username: string;
 }

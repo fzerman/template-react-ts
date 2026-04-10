@@ -7,6 +7,8 @@ import type {
     MarketPrices,
 } from "../../../shared/NetworkEvents.js";
 import { socketAuth } from "../middleware/socketAuth.js";
+import { validate, MarketBuySchema, MarketSellSchema, UserSyncSchema } from "../validators/socketEvents.js";
+import { z } from "zod";
 
 type TypedServer = Server<
     ClientToServerEvents,
@@ -76,9 +78,33 @@ export class SocketManager {
     // ── Handler registration ────────────────────────────────────────────
 
     private registerHandlers(socket: TypedSocket): void {
-        socket.on("user:sync", (data) => this.handleUserSync(socket, data));
-        socket.on("market:buy", (data) => this.handleMarketBuy(socket, data));
-        socket.on("market:sell", (data) => this.handleMarketSell(socket, data));
+        socket.on("user:sync", (data) => {
+            try {
+                this.handleUserSync(socket, validate(UserSyncSchema, data));
+            } catch (err) {
+                if (err instanceof z.ZodError) {
+                    socket.emit("notification", { type: "danger", message: "Invalid user:sync payload" });
+                }
+            }
+        });
+        socket.on("market:buy", (data) => {
+            try {
+                this.handleMarketBuy(socket, validate(MarketBuySchema, data));
+            } catch (err) {
+                if (err instanceof z.ZodError) {
+                    socket.emit("notification", { type: "danger", message: "Invalid market:buy payload" });
+                }
+            }
+        });
+        socket.on("market:sell", (data) => {
+            try {
+                this.handleMarketSell(socket, validate(MarketSellSchema, data));
+            } catch (err) {
+                if (err instanceof z.ZodError) {
+                    socket.emit("notification", { type: "danger", message: "Invalid market:sell payload" });
+                }
+            }
+        });
         socket.on("ping", (cb) => cb(Date.now()));
     }
 

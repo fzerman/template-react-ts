@@ -1,8 +1,10 @@
 import { Scene } from "phaser";
+import { networkManager } from "../network/NetworkManager";
 
 const W = 1920;
 const H = 1080;
 const MIN_MS = 4000; // minimum splash duration
+const DEV_MODE = import.meta.env.DEV;
 
 export class Preloader extends Scene {
     private startTime = 0;
@@ -91,6 +93,27 @@ export class Preloader extends Scene {
         this.load.setPath("assets");
         this.load.image("logo", "logo.png");
         this.load.image("star", "star.png");
+
+        if (DEV_MODE) {
+            this.devAuth();
+        }
+    }
+
+    private async devAuth() {
+        try {
+            const serverUrl = import.meta.env.VITE_SERVER_URL ?? "http://localhost:3001";
+            const res = await fetch(`${serverUrl}/api/v1/auth/dev-token`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: "DevPlayer" }),
+            });
+            if (!res.ok) throw new Error(`dev-token failed (${res.status})`);
+            const { token } = await res.json() as { token: string };
+            await networkManager.authenticate(token);
+            console.log("[Preloader] dev auth complete");
+        } catch (err) {
+            console.warn("[Preloader] dev auth failed, continuing offline:", err);
+        }
     }
 
     create() {
@@ -125,7 +148,7 @@ export class Preloader extends Scene {
                 pct.setText(`${Math.round(((w as number) / barW) * 100)}%`);
             },
             onComplete: () => {
-                this.scene.start("MainMenu");
+                this.scene.start(DEV_MODE ? "Game" : "MainMenu");
             },
         });
     }
