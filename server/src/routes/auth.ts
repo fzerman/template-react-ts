@@ -2,6 +2,7 @@ import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import rateLimit from "express-rate-limit";
+import { UniqueConstraintError } from "sequelize";
 import { Player } from "../db/models/index.js";
 import { env } from "../config/env.js";
 
@@ -40,18 +41,36 @@ router.post("/connect", async (req, res) => {
         }
 
         // Get-or-create player
-        const [player, created] = await Player.findOrCreate({
-            where: { vendorId: payload.vendorId },
-            defaults: {
-                username: payload.username,
-                vendorId: payload.vendorId,
-            },
-        });
+        let player: Player;
+        let created: boolean;
+        try {
+            [player, created] = await Player.findOrCreate({
+                where: { vendorId: payload.vendorId },
+                defaults: {
+                    username: payload.username,
+                    vendorId: payload.vendorId,
+                },
+            });
+        } catch (err) {
+            if (err instanceof UniqueConstraintError) {
+                res.status(409).json({ error: "Username already taken" });
+                return;
+            }
+            throw err;
+        }
 
         // Update username if changed
         if (!created && player.username !== payload.username) {
             player.username = payload.username;
-            await player.save();
+            try {
+                await player.save();
+            } catch (err) {
+                if (err instanceof UniqueConstraintError) {
+                    res.status(409).json({ error: "Username already taken" });
+                    return;
+                }
+                throw err;
+            }
         }
 
         // Issue game tokens
@@ -155,7 +174,7 @@ if (env.NODE_ENV === "development") {
     router.post("/dev-token", (req, res) => {
         const username =
             (req.body as { username?: string }).username || "Player";
-        const vendorId = `vendor_${Date.now().toString(36)}`;
+        const vendorId = `dev_${username}`;
         const token = jwt.sign({ vendorId, username }, env.PUBLISHER_JWT_SECRET, {
             expiresIn: "24h",
         });

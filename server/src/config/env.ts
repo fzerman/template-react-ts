@@ -19,4 +19,5 @@ export const env = {
     ADMIN_EMAIL: requireEnv("ADMIN_EMAIL", "admin@mafia.local"),
     ADMIN_PASSWORD: requireEnv("ADMIN_PASSWORD", "admin"),
     ADMIN_COOKIE_SECRET: requireEnv("ADMIN_COOKIE_SECRET", "admin-cookie-secret-change-me"),
+    PAYMENT_CALLBACK_SECRET: requireEnv("PAYMENT_CALLBACK_SECRET", "payment-callback-secret-change-me"),
 } as const;

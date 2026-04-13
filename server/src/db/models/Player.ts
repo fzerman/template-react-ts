@@ -40,6 +40,7 @@ export function initPlayer(sequelize: Sequelize): typeof Player {
             username: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                unique: true,
             },
         },
         {

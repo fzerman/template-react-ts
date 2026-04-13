@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.js";
+import productRoutes from "./routes/products.js";
+import paymentRoutes from "./routes/payments.js";
+import taskRoutes from "./routes/tasks.js";
 
 const app = express();
 
@@ -17,6 +20,9 @@ app.use(express.json());
 
 // ─── Routes ─────────────────────────────────────────────────────────────────
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/payments", paymentRoutes);
+app.use("/api/v1/tasks", taskRoutes);
 
 // ─── Health Check ───────────────────────────────────────────────────────────
 app.get("/health", (_req, res) => {
